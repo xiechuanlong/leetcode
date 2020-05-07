@@ -8,6 +8,7 @@
 
 // 5. 链表结构
 
+// 5.1 单向链表
 function ListNode(val) { // node节点
     this.val = val;
     this.next = null;
@@ -23,4 +24,6 @@ function createList(arr) { //创建单向链表
     }
     return head;
 }
+
+// 5.2 双向链表
 
