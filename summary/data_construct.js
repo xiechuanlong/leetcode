@@ -106,14 +106,19 @@ const Queue = (function() {
     return Queue;
 })();
 
+// 5.链表结构
+// *增加需要考虑   头结点添加(空链情况), 尾节点添加， 中间节点添加
+// *删除需要考虑   头结点删除（只有一个节点）， 非头结点删除， 双链还要考虑尾部节点特殊情况
 /* 
-*  5. 单向链表结构
+*  5.1 单向链表结构
 *  链表长度 length
 *  尾部增加node节点 push()
 *  删除指定index的节点 delete(index)
-*  指定节点index后添加节点 add(index)
+*  指定添加index节点到链表中 add(index)
 *  返回指定index处的节点 get(index)
 *  链表是否为空 isEmpty()
+*  清空链表clear()
+*  反转链表reverse()
 *  print 打印链表节点
 */
 
@@ -128,15 +133,7 @@ const LinkedList = (function() {
     let head = null, tail = null, length = 0;
     class LinkedList {
         push(data) { //尾部添加节点
-            let node = new Node(data);
-            if(head == null) {
-                head = node;
-                tail = node;
-            } else {
-                tail.next = node;
-                tail = node;
-            }
-            length++
+           this.add(length);
         }
     
         pop() { //尾部删除节点
@@ -162,9 +159,13 @@ const LinkedList = (function() {
             }
 
             if(index==0) {
-                node.next = head;
-                head = node;
-                length==0 && (tail = node); //只有一个节点
+                if(length == null) {
+                    head = node;
+                    tail = node;
+                } else {
+                    tail.next = node;
+                    tail = node;
+                }
                 length++;
                 return;
             }
@@ -215,6 +216,10 @@ const LinkedList = (function() {
             tail = null;
             length = 0;
         }
+
+        reverse() {
+
+        }
     
         print() {
             let currentNode =head;
@@ -242,6 +247,188 @@ const LinkedList = (function() {
 })();
 
 // 5.2 双向链表
+/* 
+*  链表长度 length
+*  尾部增加node节点 push()
+*  删除指定index的节点 delete(index)
+*  指定添加index节点到链表中 add(index)
+*  返回指定index处的节点 get(index)
+*  链表是否为空 isEmpty()
+*  print 打印链表节点
+*/
 
+const doubleLinkedList = (function(){
+    class Node {
+        constructor(data) {
+            this.data = data;
+            this.pre = null;
+            this.next = null;
+        }
+    }
 
+    let head = null, tail = null, length=0;
 
+    class doubleLinkedLIst {
+        // 添加需要考虑是否为空链
+        push(data) {
+            this.add(length);
+        }
+
+        pop() {
+           return  this.delete(length-1);
+        }
+
+        add(index, data) {
+            let node = new Node(data);
+            if(index<0 || index>this.length) {
+                return;
+            }
+
+            if(index==0) { //首节点添加（包含空链情况放入）
+                if(length==0) {
+                    head = node;
+                    tail = node;
+                } else {
+                   node.next = head;
+                   head = node;
+                }
+                length++;
+                return;
+            }
+
+            if(index==this.length) {
+                tail.next = node;
+                node.pre = tail;
+                tail = node;
+                length++;
+                return;
+            }
+
+            if(index>0 && index<this.length) { //需要获取到前后节点
+                let selectNode = this.get(index);
+                let preNode = selectNode.pre;
+                preNode.next = node;
+                node.pre = preNode;
+                node.next = selectNode;
+                selectNode.pre = node;
+                length++;
+                return;
+            }
+        }
+
+        get(index) { //
+            let currentNode = head, currentIndex = 0;
+            while(currentIndex<index) {
+                currentIndex++
+                currentNode = currentNode.next;
+            }
+
+            return currentNode;
+        }
+
+        delete(index) {
+            let node = null;
+            if(index<0 || index>length) {
+                return node;
+            }
+
+            if(index==0) {
+                node = head;
+                if(length==1) {
+                    head = null;
+                    this.tail = null;
+                } else {
+                    head.pre = null;
+                    head = head.next;
+                }
+                length--;
+                return node;
+            }
+
+            if(index == length-1) {
+                node = tail;
+                tail = tail.pre;
+                tail.next = null;
+                length--;
+                return node;
+            }
+
+            if(index>0 && index<this.length-1) { //需要获取到前后节点
+                node = this.get(index);
+                let preNode = node.pre, nextNode = node.next;
+                preNode.next = nextNode;
+                nextNode.pre = preNode;
+                length--;
+                return node;
+            }
+        }
+
+        clear(){
+            tail = null;
+            head = null;
+            length = 0;
+        }
+
+        print() {
+            let list = [];
+            let currentNode = this.head;
+            while(currentNode) {
+                list.push(currentNode.data);
+                currentNode = currentNode.next;
+            }
+            console.log(list.join(' <--> '))
+        }
+
+        reverse() {
+
+        }
+
+        get head() {
+            return head;
+        }
+
+        get tail() {
+            return tail;
+        }
+
+        get length() {
+            return length;
+        }
+    }
+
+    return doubleLinkedLIst;
+})()
+
+// 6.树结构
+/**
+* 二叉树：Binary Search Tree(子节点树不超过2个)
+* AVL树：AVL Tree
+* 红黑树：Red-Black Tree
+* 线段树： Segment Tree - with min/max/sum range queries examples
+* 芬威克树：Fenwick Tree (Binary Indexed Tree)
+ */
+
+ /**
+  * 6.1 二叉树的实现
+  *  增加节点
+  *  删除节点
+  *  查找节点
+  *  先序遍历
+  *  中序遍历
+  *  后序遍历
+  */
+
+  const BST = (function(){
+      class Node {
+          constructor(data) {
+            this.left = null;
+            this.right = null;
+            this.data = data;
+          }
+      }
+
+      let root = null;
+      class BST {
+
+      }
+  })()
